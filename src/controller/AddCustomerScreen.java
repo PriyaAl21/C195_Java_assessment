@@ -7,20 +7,25 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import model.Country;
 import model.Customer;
+import model.DataStorage;
 import model.Division;
 import utilities.Crud;
+import controller.CustomerAppointmentScreen;
 import utilities.DBQuery;
 import utilities.JDBC;
 
+import javax.xml.crypto.Data;
 import javax.xml.transform.Result;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
+
+import static controller.LogInScreen.name;
+//import static controller.LogInScreen.userName;
 
 public class AddCustomerScreen extends Crud implements Initializable {
     public TextField customerNameField;
@@ -32,13 +37,23 @@ public class AddCustomerScreen extends Crud implements Initializable {
     public Button addCustomerButton;
     public Button OnCancelAdd;
 
-    public Customer customer;
+    public String customerName;
+    public String streetName;
+    public String phone;
+    public String postalCode;
+    public LocalDateTime createDate;
+    public String createdBy;
+    public Timestamp lastUpdate;
+    public String lastUpdatedBy;
+    public int divisionId;
+
+    //public Customer customer;
 
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        customer = new Customer();
+       // customer = new Customer();
         ObservableList<String> countryNames = FXCollections.observableArrayList();
         try {
             ResultSet rs = (ResultSet) Select("select * from countries");
@@ -51,7 +66,18 @@ public class AddCustomerScreen extends Crud implements Initializable {
         }
         chooseCountry.setItems(countryNames);
 
+        createdBy = name;
+        lastUpdatedBy = name;
+        createDate= LocalDateTime.now();
+        lastUpdate=Timestamp.valueOf(LocalDateTime.now());
+
+//        customer.setCreatedBy(createdBy);
+//        customer.setLastUpdatedBy(lastUpdatedBy);
+//        customer.setCreateDate(createDate);
+//        customer.setLastUpdate(lastUpdate);
+
     }
+
 
 
 
@@ -78,36 +104,56 @@ public class AddCustomerScreen extends Crud implements Initializable {
         String one =  chooseDivision.getSelectionModel().getSelectedItem();
         ResultSet rs = (ResultSet) Select("Select * from first_level_divisions where Division = "+ '"'+one+'"');
         while (rs.next()) {
-            customer.setDivisionId(Integer.parseInt(rs.getString("Division_ID")));
-            System.out.println(customer.getDivisionId());
+            divisionId = (Integer.parseInt(rs.getString("Division_ID")));
+            System.out.println(divisionId);
         }
 
     }
+//    public void OnCustomerName(ActionEvent actionEvent) {
+//        customerName =  customerNameField.getText();
+//        System.out.println(customerNameField.getText());
+//
+//    }
+//
+//    public void OnStreetName(ActionEvent actionEvent) {
+//        streetName =  streetNameField.getText();
+//
+//    }
+//
+//    public void OnPhoneNum(ActionEvent actionEvent) {
+//        phone =  phoneField.getText();
+//
+//    }
+//
+//    public void OnPostalCode(ActionEvent actionEvent) {
+//        postalCode =  postalCodeField.getText();
+//
+//    }
 
-    public void OnAddCustomer(ActionEvent actionEvent) {
-        //ResultSet rs
+    public void OnAddCustomer(ActionEvent actionEvent) throws Exception {
+        customerName =  customerNameField.getText();
+        streetName =  streetNameField.getText();
+        phone =  phoneField.getText();
+        postalCode =  postalCodeField.getText();
+
+
+        Insert("Insert into customers(Customer_Name,Address,Postal_Code,Phone,Create_Date,Created_By,Last_Update,Last_Updated_By,Division_ID)"+
+                " Values("+'"'+customerName+'"' +","+'"'+streetName+'"'+","+'"'+postalCode+'"'+","+'"'+phone+'"'+","+'"'+createDate+'"'+","+
+                '"'+ createdBy+'"'+","+'"'+lastUpdate+'"'+","+'"'+lastUpdatedBy+'"'+","+divisionId+")");
+
+        ResultSet rs = Select("Select * from customers order by CUSTOMER_ID DESC LIMIT 1");
+        while (rs.next()) {
+            Customer.populate(rs);
+        }
+
+        //DataStorage.addCustomer(customer);
+        Stage stage = (Stage) addCustomerButton.getScene().getWindow();
+        stage.close();
+
     }
 
     public void OnCancel(ActionEvent actionEvent) {
     }
 
-    public void OnCustomerName(ActionEvent actionEvent) {
-       String name =  customerNameField.getText();
-       customer.setCustomerName(name);
-    }
 
-    public void OnStreetName(ActionEvent actionEvent) {
-        String name =  streetNameField.getText();
-        customer.setAddress(name);
-    }
-
-    public void OnPhoneNum(ActionEvent actionEvent) {
-        String num =  phoneField.getText();
-        customer.setPhone(num);
-    }
-
-    public void OnPostalCode(ActionEvent actionEvent) {
-        String post =  postalCodeField.getText();
-        customer.setPostalCode(post);
-    }
 }

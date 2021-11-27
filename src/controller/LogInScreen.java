@@ -35,13 +35,15 @@ public class LogInScreen implements Initializable {
     @FXML
    private Label usName;
     @FXML
-    private TextField userName;
+  private TextField userName;
     @FXML
     private TextField password;
     @FXML
     private Button logInButton;
     @FXML
     private Label zoneId;
+
+    public static String name;
 
     ResourceBundle rb;
 
@@ -96,6 +98,7 @@ public class LogInScreen implements Initializable {
 
                         if (name.equals(user)) {
                             if (pass.equals(pwd)) {
+                                this.name = user;
                                 System.out.println("login");
                                 Stage primaryStage = new Stage();
                                 Parent root = FXMLLoader.load(getClass().getResource("/view/customerAppointmentScreen.fxml"));

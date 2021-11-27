@@ -39,10 +39,10 @@
                         <Font size="14.0" />
                     </font>
                 </Label>
-                <TextField fx:id="customerNameField" onAction="#OnCustomerName"  layoutX="246.0" layoutY="109.0" />
-                <TextField fx:id="streetNameField" onAction="#OnStreetName"  layoutX="320.0" layoutY="160.0" prefHeight="25.0" prefWidth="116.0" />
-                <TextField fx:id="phoneField" onAction="#OnPhoneNum"   layoutX="246.0" layoutY="219.0" />
-                <TextField fx:id="postalCodeField" onAction="#OnPostalCode"  layoutX="246.0" layoutY="272.0" />
+                <TextField fx:id="customerNameField"  layoutX="246.0" layoutY="109.0" />
+                <TextField fx:id="streetNameField"  layoutX="320.0" layoutY="160.0" prefHeight="25.0" prefWidth="116.0" />
+                <TextField fx:id="phoneField"  layoutX="246.0" layoutY="219.0" />
+                <TextField fx:id="postalCodeField"  layoutX="246.0" layoutY="272.0" />
                 <Label layoutX="246.0" layoutY="164.0" text="Apt#,Street" />
                 <ComboBox fx:id="chooseCountry" layoutX="461.0" layoutY="160.0" onAction="#OnChooseCountry" prefHeight="25.0" prefWidth="103.0" promptText="Country" />
                 <ComboBox fx:id="chooseDivision" layoutX="595.0" layoutY="160.0" onAction="#OnChooseDivision" prefHeight="25.0" prefWidth="126.0" promptText="State/Province" />

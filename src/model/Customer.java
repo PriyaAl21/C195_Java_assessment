@@ -3,8 +3,11 @@ package model;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
-
+import model.DataStorage;
 public class Customer {
 
     public int getCustomerId() {
@@ -63,11 +66,11 @@ public class Customer {
         this.createdBy = createdBy;
     }
 
-    public LocalDateTime getLastUpdate() {
+    public Timestamp getLastUpdate() {
         return lastUpdate;
     }
 
-    public void setLastUpdate(LocalDateTime lastUpdate) {
+    public void setLastUpdate(Timestamp lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
 
@@ -94,7 +97,7 @@ public class Customer {
     public String phone;
     public LocalDateTime createDate;
     public String createdBy;
-    public LocalDateTime lastUpdate;
+    public Timestamp lastUpdate;
     public String lastUpdatedBy;
     public int divisionId;
 
@@ -102,7 +105,7 @@ public class Customer {
 
     }
 
-    public Customer(int customerId,String customerName,String address,String phone,String postalCode,LocalDateTime createDate,String createdBy,LocalDateTime lastUpdate,
+    public Customer(int customerId,String customerName,String address,String phone,String postalCode,LocalDateTime createDate,String createdBy,Timestamp lastUpdate,
                     String lastUpdatedBy,int divisionId){
         this.customerId = customerId ;
         this.customerName = customerName;
@@ -114,6 +117,28 @@ public class Customer {
         this.lastUpdate = lastUpdate;
         this.lastUpdatedBy = lastUpdatedBy;
         this.divisionId = divisionId;
+
+    }
+
+    public static void populate(ResultSet rs) throws SQLException {
+
+            int customerId = Integer.parseInt(rs.getString("Customer_ID"));
+            String customerName = rs.getString("Customer_Name");
+            String address = rs.getString("Address");
+            String postalCode = rs.getString("Postal_Code");
+            String phone = rs.getString("Phone");
+            LocalDateTime createDate = rs.getTimestamp("Create_Date").toLocalDateTime();
+            String createdBy = rs.getString("Created_By");
+            Timestamp lastUpdate = rs.getTimestamp("Last_Update");
+            String lastUpdatedBy = rs.getString("Last_Updated_By");
+            int divisionId = Integer.parseInt(rs.getString("Division_ID"));
+
+            Customer one = new Customer(customerId, customerName, address, phone, postalCode, createDate, createdBy, lastUpdate,
+                    lastUpdatedBy, divisionId);
+            DataStorage.getAllCustomers().add(one);
+            System.out.println(one.getCustomerId());
+
+
 
     }
 

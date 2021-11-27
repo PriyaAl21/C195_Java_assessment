@@ -38,4 +38,13 @@ public abstract class Crud {
         return rs;
     }
 
+    public void Insert(String insertStatement) throws SQLException {
+        Connection conn = JDBC.getConnection();
+        DBQuery.setStatement(conn);
+        Statement st = DBQuery.getStatement();
+        st.execute(insertStatement);
+        System.out.println("added");
+
+    }
+
 }

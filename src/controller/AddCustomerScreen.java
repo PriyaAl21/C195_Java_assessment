@@ -46,6 +46,7 @@ public class AddCustomerScreen extends Crud implements Initializable {
     public Timestamp lastUpdate;
     public String lastUpdatedBy;
     public int divisionId;
+    public Button cancelButton;
 
     //public Customer customer;
 
@@ -160,6 +161,8 @@ public class AddCustomerScreen extends Crud implements Initializable {
     }
 
     public void OnCancel(ActionEvent actionEvent) {
+        Stage stage = (Stage) cancelButton.getScene().getWindow();
+        stage.close();
     }
 
 

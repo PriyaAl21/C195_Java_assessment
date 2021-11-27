@@ -38,6 +38,20 @@ public class DataStorage {
     public static ObservableList<Appointment> getAllAppointments() {
         return allAppointments;
     }
+
+    public static void modifyCustomer(Customer customer) {
+   for(Customer c: allCustomers){
+       if(c.getCustomerId()==customer.getCustomerId()){
+           allCustomers.remove(c);
+           allCustomers.add(customer);
+           break;
+       }
+   }
+
+
+    }
+
+
 }
 
 

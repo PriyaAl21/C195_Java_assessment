@@ -126,6 +126,13 @@ public class CustomerAppointmentScreen extends Crud  implements Initializable {
                 e.printStackTrace();
             }
         }
+        else{
+            Alert noSelection = new Alert(Alert.AlertType.INFORMATION);
+            noSelection.setTitle("No Selection made");
+            noSelection.setContentText("Please Select a Customer to Modify!");
+            noSelection.showAndWait();
+        }
+
     }
 
     public void onDelete(ActionEvent actionEvent) {

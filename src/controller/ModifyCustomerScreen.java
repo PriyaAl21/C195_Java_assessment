@@ -7,12 +7,15 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import model.Customer;
+import model.DataStorage;
 import utilities.Crud;
 
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
@@ -30,6 +33,7 @@ public class ModifyCustomerScreen extends Crud implements Initializable {
     public Button modifyCustomerButton;
     public Button OnCancel;
     public Customer customer;
+    public Button cancelButton;
 
 
     @Override
@@ -84,19 +88,28 @@ public class ModifyCustomerScreen extends Crud implements Initializable {
             divisionNames.add(rs2.getString("Division"));
         }
         chooseDivision.setItems(divisionNames);
-
-
-
     }
 
-    public void OnChooseCountry(ActionEvent actionEvent) {
+
+    public void OnChooseCountry(ActionEvent actionEvent) throws SQLException {
+        chooseDivision.setPromptText("State/Province");
+        String countryName = chooseCountry.getSelectionModel().getSelectedItem();
+        ObservableList<String>divisionNames = FXCollections.observableArrayList();
+
+        ResultSet rs2 = Select("Select * from first_level_divisions join countries \n" +
+                "on countries.Country_ID=first_level_divisions.Country_ID\n" +
+                "where countries.Country = "+'"'+countryName+'"' );
+        while (rs2.next()) {
+            divisionNames.add(rs2.getString("Division"));
+        }
+        chooseDivision.setItems(divisionNames);
     }
 
     public void OnChooseDivision(ActionEvent actionEvent) {
     }
 
     public void OnUpdateCustomer(ActionEvent actionEvent) throws SQLException {
-       // customerNameId.setPromptText(String.valueOf(customer.getCustomerId()));
+        int customerId = customer.getCustomerId();
         String customerName = customerNameField.getText();
         String street = streetNameField.getText();
         String phone = phoneField.getText();
@@ -104,20 +117,31 @@ public class ModifyCustomerScreen extends Crud implements Initializable {
         LocalDateTime createDate = customer.getCreateDate();
         String createdBy = customer.getCreatedBy();
         String division =  chooseDivision.getSelectionModel().getSelectedItem();
+        Timestamp lastUpdate = Timestamp.valueOf(LocalDateTime.now());
+       String lastUpdatedBy = LogInScreen.name;
 
         int divisionId = 0;
         ResultSet rs = (ResultSet) Select("Select * from first_level_divisions where Division = "+ '"'+division+'"');
         while (rs.next()) {
             divisionId = (rs.getInt("Division_ID"));
         }
-        System.out.println("UPDATE customers SET Customer_Name = " +'"'+ customerName+'"' +" Address = " +'"'+ street+'"'+
-                " Postal_Code = " +'"'+ postalCode+'"'+" Phone = " +'"'+ phone+'"'+" Create_Date = "+'"'+ createDate +'"'+
-                " Created_By = "+'"'+ createdBy+'"'+" Last_Update = "+'"'+ Timestamp.valueOf(LocalDateTime.now())+'"'+" Last_Updated_By = "+
-                '"'+LogInScreen.name+'"'+" Division_ID = "+divisionId);
+
+        InsertUpdateDelete("UPDATE customers SET Customer_Name = " +'"'+ customerName+'"' +" ,Address = " +'"'+ street+'"'+
+                " ,Postal_Code = " +'"'+ postalCode+'"'+" ,Phone = " +'"'+ phone+'"'+" ,Create_Date = "+'"'+ createDate +'"'+
+                " ,Created_By = "+'"'+ createdBy+'"'+" ,Last_Update = "+'"'+ lastUpdate+'"'+" ,Last_Updated_By = "+
+                '"'+lastUpdatedBy+'"'+" ,Division_ID = "+divisionId + " WHERE Customer_ID = "+customerId);
+
+        Customer modified = new Customer(customerId,customerName,street,phone,postalCode,createDate,createdBy,lastUpdate,lastUpdatedBy,divisionId);
+        DataStorage.modifyCustomer(modified);
+
+        Stage stage = (Stage) modifyCustomerButton.getScene().getWindow();
+        stage.close();
 
     }
-//Create_Date  Created_By  Last_Update Last_Updated_By Division_ID
+
     public void OnCancel(ActionEvent actionEvent) {
+        Stage stage = (Stage) cancelButton.getScene().getWindow();
+        stage.close();
     }
 
 

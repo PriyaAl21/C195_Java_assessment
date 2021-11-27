@@ -59,22 +59,6 @@ public class CustomerAppointmentScreen extends Crud  implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-
-//            Statement st = null;
-//            ResultSet rs;
-//            try {
-//                st = JDBC.getConnection().createStatement();
-//            } catch (SQLException throwables) {
-//                throwables.printStackTrace();
-//            }
-//            String sqlStatement = "Select * from customers";
-//            try {
-//                st.execute(sqlStatement);
-//            } catch (SQLException throwables) {
-//                throwables.printStackTrace();
-//            }
-//            try {
-//                rs = st.getResultSet();
         ResultSet rs = null;
         try {
             rs = Select("Select * from customers");
@@ -88,29 +72,13 @@ public class CustomerAppointmentScreen extends Crud  implements Initializable {
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
-//
+
             try {
                 Customer.populate(rs);
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
-//                    int customerId = Integer.parseInt(rs.getString("Customer_ID"));
-//                    String customerName = rs.getString("Customer_Name");
-//                    String address = rs.getString("Address");
-//                    String postalCode = rs.getString("Postal_Code");
-//                    String phone = rs.getString("Phone");
-//                    LocalDateTime createDate = rs.getTimestamp("Create_Date").toLocalDateTime();
-//                    String createdBy = rs.getString("Created_By");
-//                   Timestamp lastUpdate = rs.getTimestamp("Last_Update");
-//                    String lastUpdatedBy = rs.getString("Last_Updated_By");
-//                    int divisionId = Integer.parseInt(rs.getString("Division_ID"));
-//
-//                    Customer one = new Customer(customerId, customerName, address, phone, postalCode, createDate, createdBy, lastUpdate,
-//                            lastUpdatedBy, divisionId);
-//                    DataStorage.getAllCustomers().add(one);
-//                    System.out.println(one.getCustomerId());
-//
-                //}
+
             }
 
 
@@ -124,24 +92,17 @@ public class CustomerAppointmentScreen extends Crud  implements Initializable {
             lastUpdateCol.setCellValueFactory(new PropertyValueFactory<Customer, Timestamp>("lastUpdate"));
             lastUpdatedByCol.setCellValueFactory(new PropertyValueFactory<Customer, String>("lastUpdatedBy"));
             divisionIdCol.setCellValueFactory(new PropertyValueFactory<Customer, Integer>("divisionId"));
+
             customerTable.setItems(DataStorage.getAllCustomers());
 
         }
 
-
-
-
-
-
-
-    //}
 
     public void onAdd(ActionEvent actionEvent) {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/view/AddCustomerScreen.fxml"));
             Stage stage = new Stage();
             stage.setTitle("Add Customer");
-           // Scene scene = new Scene(root,700,500);
             stage.setScene(new Scene(root, 800, 600));
             stage.show();
         } catch (Exception e) {
@@ -150,6 +111,21 @@ public class CustomerAppointmentScreen extends Crud  implements Initializable {
     }
 
     public void onEdit(ActionEvent actionEvent) {
+        if ((Customer) customerTable.getSelectionModel().getSelectedItem() != null) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ModifyCustomerScreen.fxml"));
+                Parent root = loader.load();
+                ModifyCustomerScreen mc = loader.getController();
+                mc.populateModifyForm((Customer) customerTable.getSelectionModel().getSelectedItem());
+                Stage stage = new Stage();
+                stage.setTitle("Modify Customer");
+                stage.setScene(new Scene(root, 800, 600));
+                stage.show();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void onDelete(ActionEvent actionEvent) {

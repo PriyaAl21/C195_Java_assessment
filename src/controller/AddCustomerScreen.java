@@ -82,19 +82,26 @@ public class AddCustomerScreen extends Crud implements Initializable {
 
 
     public void OnChooseCountry(ActionEvent actionEvent) throws Exception{
-        int id=0;
+       // int id=0;
         ObservableList<String>divisionNames = FXCollections.observableArrayList();
         String one = (String) chooseCountry.getSelectionModel().getSelectedItem();
+        //int countryId = Integer.parseInt(one);
+//        ResultSet rs1 = (ResultSet) Select("Select * from countries where Country = "+ '"'+one+'"');
+//        while (rs1.next()) {
+//            id = Integer.parseInt(rs1.getString("Country_ID"));
+//        }
+//
+//
+//       ResultSet rs2 = (ResultSet) Select("Select * from first_level_divisions where Country_ID = "+ id);
+//        while (rs2.next()) {
+//           divisionNames.add(rs2.getString("Division"));
+//        }
 
-        ResultSet rs1 = (ResultSet) Select("Select * from countries where Country = "+ '"'+one+'"');
-        while (rs1.next()) {
-            id = Integer.parseInt(rs1.getString("Country_ID"));
-        }
-
-
-       ResultSet rs2 = (ResultSet) Select("Select * from first_level_divisions where Country_ID = "+ id);
-        while (rs2.next()) {
-           divisionNames.add(rs2.getString("Division"));
+        ResultSet rs = Select("Select * from first_level_divisions join countries \n" +
+                "on countries.Country_ID=first_level_divisions.Country_ID\n" +
+                "where countries.Country = "+'"'+one+'"' );
+        while (rs.next()) {
+            divisionNames.add(rs.getString("Division"));
         }
         chooseDivision.setItems(divisionNames);
 
@@ -137,7 +144,7 @@ public class AddCustomerScreen extends Crud implements Initializable {
         postalCode =  postalCodeField.getText();
 
 
-        Insert("Insert into customers(Customer_Name,Address,Postal_Code,Phone,Create_Date,Created_By,Last_Update,Last_Updated_By,Division_ID)"+
+        InsertUpdateDelete("Insert into customers(Customer_Name,Address,Postal_Code,Phone,Create_Date,Created_By,Last_Update,Last_Updated_By,Division_ID)"+
                 " Values("+'"'+customerName+'"' +","+'"'+streetName+'"'+","+'"'+postalCode+'"'+","+'"'+phone+'"'+","+'"'+createDate+'"'+","+
                 '"'+ createdBy+'"'+","+'"'+lastUpdate+'"'+","+'"'+lastUpdatedBy+'"'+","+divisionId+")");
 

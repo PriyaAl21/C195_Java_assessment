@@ -35,7 +35,7 @@ public class Main extends Application {
         loader.setResources(rb);
         main = loader.load();
 
-        Scene scene = new Scene(main,700,500);
+        Scene scene = new Scene(main,800,500);
 
         primaryStage.setScene(scene);
         primaryStage.show();

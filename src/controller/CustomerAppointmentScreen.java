@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import model.Appointment;
 import model.Customer;
 import model.DataStorage;
 import utilities.Crud;
@@ -37,14 +38,22 @@ public class CustomerAppointmentScreen extends Crud  implements Initializable {
     public TableColumn<Customer, Timestamp> lastUpdateCol;
     public TableColumn<Customer, String> lastUpdatedByCol;
     public TableColumn<Customer, Integer> divisionIdCol;
+    public Button addApptButton;
+    public Button editApptButton;
+    public Button deleteApptButton;
+    public Button aptDisplayButton;
+    public RadioButton radio;
+    public ToggleGroup weekMonth;
+
+
 
     public ObservableList<Customer> getDbList() {
         return dbList;
     }
 
     public ObservableList<Customer> dbList = FXCollections.observableArrayList();
-    public TableView apptTable;
-    public TableColumn apptIdCol;
+    public TableView aptTable;
+    public TableColumn<Appointment,Integer> aptIdCol;
     public TableColumn titleCol;
     public TableColumn descriptionCol;
     public TableColumn locationCol;
@@ -52,7 +61,7 @@ public class CustomerAppointmentScreen extends Crud  implements Initializable {
     public TableColumn typeCol;
     public TableColumn startDateTimeCol;
     public TableColumn endDateTimeCol;
-    public TableColumn cusIdCol;
+    public TableColumn customerIDCol;
     public TableColumn userIdCol;
 
 
@@ -95,7 +104,52 @@ public class CustomerAppointmentScreen extends Crud  implements Initializable {
 
             customerTable.setItems(DataStorage.getAllCustomers());
 
+
+        ResultSet rs1 = null;
+        try {
+         rs1 = Select("select appointments.Appointment_ID,  appointments.Title, appointments.Description ,appointments.Location,contacts.contact_Name,\n" +
+                    "appointments.Type,appointments.Start,appointments.End,appointments.Customer_ID,appointments.User_ID\n" +
+                    "from appointments \n" +
+                    "join contacts\n" +" on appointments.Contact_ID = contacts.Contact_ID");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
+
+        while (true) {
+            try {
+                if (!rs1.next()) break;
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+
+            try {
+                Appointment.populate(rs);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+
+        }
+
+        aptIdCol.setCellValueFactory(new PropertyValueFactory<>("aptId"));
+        titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
+        descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
+        locationCol.setCellValueFactory(new PropertyValueFactory<>("location"));
+        contactCol.setCellValueFactory(new PropertyValueFactory<>("contact"));
+        typeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
+        startDateTimeCol.setCellValueFactory(new PropertyValueFactory<>("startDateNTime"));
+        endDateTimeCol.setCellValueFactory(new PropertyValueFactory<>("endDateNTime"));
+        customerIDCol.setCellValueFactory(new PropertyValueFactory<>("customerId"));
+        userIdCol.setCellValueFactory(new PropertyValueFactory<>("userId"));
+
+        aptTable.setItems(DataStorage.getAllAppointments());
+
+            }
+
+
+
+
+
+
 
 
     public void onAdd(ActionEvent actionEvent) {
@@ -136,5 +190,42 @@ public class CustomerAppointmentScreen extends Crud  implements Initializable {
     }
 
     public void onDelete(ActionEvent actionEvent) {
+    }
+
+    public void onAddAppt(ActionEvent actionEvent) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/view/AddAppointmentScreen.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Add Customer");
+            stage.setScene(new Scene(root, 800, 600));
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void onEditAppt(ActionEvent actionEvent) {
+    }
+
+    public void onDeleteAppt(ActionEvent actionEvent) {
+    }
+
+//    public void OnDisplay(ActionEvent actionEvent) throws SQLException {
+//        Customer customer = (Customer) customerTable.getSelectionModel().getSelectedItem();
+//        int customerId = customer.getCustomerId();
+//
+//
+//        while (rs.next()) {
+//
+//            Appointment.populate(rs);
+//        }
+//
+//
+//    }
+
+    public void OnSelectWeek(ActionEvent actionEvent) {
+    }
+
+    public void OnSelectMonth(ActionEvent actionEvent) {
     }
 }

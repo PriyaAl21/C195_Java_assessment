@@ -1,9 +1,17 @@
 package model;
 
+import com.mysql.cj.protocol.Resultset;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class Appointment {
-    public int apptId;
+    public int aptId;
     public String title;
     public String description;
     public String location;
@@ -14,8 +22,9 @@ public class Appointment {
     public int customerId;
     public int userId;
 
-    public Appointment(int apptId, String title, String description, String location, String contact, String type, LocalDateTime startDateNTime, LocalDateTime endDateNTime, int customerId, int userId) {
-        this.apptId = apptId;
+    public Appointment(int aptId, String title, String description, String location, String contact, String type,
+                       LocalDateTime startDateNTime, LocalDateTime endDateNTime, int customerId, int userId) {
+        this.aptId = aptId;
         this.title = title;
         this.description = description;
         this.location = location;
@@ -27,12 +36,12 @@ public class Appointment {
         this.userId = userId;
     }
 
-    public int getApptId() {
-        return apptId;
+    public int getAptId() {
+        return aptId;
     }
 
-    public void setApptId(int apptId) {
-        this.apptId = apptId;
+    public void setAptId(int aptId) {
+        this.aptId = aptId;
     }
 
     public String getTitle() {
@@ -105,5 +114,50 @@ public class Appointment {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+
+    public static void populate(ResultSet rs) throws SQLException {
+
+        int aptId = Integer.parseInt(rs.getString("Appointment_ID"));
+        String title = rs.getString("Title");
+        String description = rs.getString("Description");
+        String location = rs.getString("Location");
+        String contact = rs.getString("Contact_Name");
+        String type = rs.getString("Type");
+      //
+        LocalDateTime start =rs.getTimestamp("Start").toLocalDateTime();
+        System.out.println(start);
+        ZonedDateTime ldtZoned = start.atZone(ZoneId.systemDefault());//what zone is start in before it is changed to system default?
+        LocalDateTime changedDateTime = ldtZoned.toLocalDateTime();
+       // String str = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(changedDateTime);
+
+
+       // System.out.println(startDT);
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//        LocalDateTime localDateTime= LocalDateTime.parse(start.toString(), formatter);
+//        ZonedDateTime zonedDateTime = localDateTime
+//                .atZone(ZoneId.of("UTC", ZoneId.SHORT_IDS))
+//                .withZoneSameInstant(ZoneId.of("EST", ZoneId.SHORT_IDS));
+//        System.out.println(zonedDateTime);
+
+       // LocalDateTime startDateNTime = rs.getTimestamp("Start").toLocalDateTime();;
+        LocalDateTime startDateNTime = changedDateTime;
+
+        LocalDateTime end = rs.getTimestamp("End").toLocalDateTime();
+        ZonedDateTime ldtZoned1 = end.atZone(ZoneId.systemDefault());
+        LocalDateTime endDateNTime = ldtZoned1.toLocalDateTime();
+       //
+        int customerId =(rs.getInt("Customer_ID"));
+        int userId =(rs.getInt("User_ID"));
+
+
+        Appointment one = new Appointment(aptId, title, description, location, contact,type,
+                startDateNTime, endDateNTime, customerId,  userId);
+        DataStorage.getAllAppointments().add(one);
+        System.out.println(one.getCustomerId());
+
+
+
     }
 }

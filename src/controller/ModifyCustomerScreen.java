@@ -122,14 +122,15 @@ public class ModifyCustomerScreen extends Crud implements Initializable {
 
         int divisionId = 0;
         ResultSet rs = (ResultSet) Select("Select * from first_level_divisions where Division = "+ '"'+division+'"');
-        while (rs.next()) {
-            divisionId = (rs.getInt("Division_ID"));
-        }
 
-        InsertUpdateDelete("UPDATE customers SET Customer_Name = " +'"'+ customerName+'"' +" ,Address = " +'"'+ street+'"'+
-                " ,Postal_Code = " +'"'+ postalCode+'"'+" ,Phone = " +'"'+ phone+'"'+" ,Create_Date = "+'"'+ createDate +'"'+
-                " ,Created_By = "+'"'+ createdBy+'"'+" ,Last_Update = "+'"'+ lastUpdate+'"'+" ,Last_Updated_By = "+
-                '"'+lastUpdatedBy+'"'+" ,Division_ID = "+divisionId + " WHERE Customer_ID = "+customerId);
+        while (rs.next()) {
+            divisionId = Integer.parseInt((rs.getString("Division_ID")));
+
+            InsertUpdateDelete("UPDATE customers SET Customer_Name = " + '"' + customerName + '"' + " ,Address = " + '"' + street + '"' +
+                    " ,Postal_Code = " + '"' + postalCode + '"' + " ,Phone = " + '"' + phone + '"' + " ,Create_Date = " + '"' + createDate + '"' +
+                    " ,Created_By = " + '"' + createdBy + '"' + " ,Last_Update = " + '"' + lastUpdate + '"' + " ,Last_Updated_By = " +
+                    '"' + lastUpdatedBy + '"' + " ,Division_ID = " + divisionId + " WHERE Customer_ID = " + customerId);
+        }
 
         Customer modified = new Customer(customerId,customerName,street,phone,postalCode,createDate,createdBy,lastUpdate,lastUpdatedBy,divisionId);
         DataStorage.modifyCustomer(modified);

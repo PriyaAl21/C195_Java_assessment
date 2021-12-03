@@ -117,17 +117,17 @@ public class Appointment {
     }
 
 
-    public static void populate(ResultSet rs) throws SQLException {
+    public static void populate(ResultSet rs)throws SQLException {
 
         int aptId = Integer.parseInt(rs.getString("Appointment_ID"));
         String title = rs.getString("Title");
         String description = rs.getString("Description");
         String location = rs.getString("Location");
-        String contact = rs.getString("Contact_Name");
+        String contact = rs.getString("contact_Name");
         String type = rs.getString("Type");
       //
         LocalDateTime start =rs.getTimestamp("Start").toLocalDateTime();
-        System.out.println(start);
+
         ZonedDateTime ldtZoned = start.atZone(ZoneId.systemDefault());//what zone is start in before it is changed to system default?
         LocalDateTime changedDateTime = ldtZoned.toLocalDateTime();
        // String str = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(changedDateTime);
@@ -151,11 +151,10 @@ public class Appointment {
         int customerId =(rs.getInt("Customer_ID"));
         int userId =(rs.getInt("User_ID"));
 
-
         Appointment one = new Appointment(aptId, title, description, location, contact,type,
                 startDateNTime, endDateNTime, customerId,  userId);
         DataStorage.getAllAppointments().add(one);
-        System.out.println(one.getCustomerId());
+
 
 
 

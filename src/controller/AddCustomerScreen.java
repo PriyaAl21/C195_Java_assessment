@@ -13,7 +13,7 @@ import model.Customer;
 import model.DataStorage;
 import model.Division;
 import utilities.Crud;
-import controller.CustomerAppointmentScreen;
+//import controller.CustomerAppointmentScreen;
 import utilities.DBQuery;
 import utilities.JDBC;
 

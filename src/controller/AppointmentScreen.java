@@ -49,7 +49,7 @@ public class AppointmentScreen extends Crud implements Initializable {
             rs = Select("select appointments.Appointment_ID,  appointments.Title, appointments.Description ,appointments.Location,contacts.contact_Name,\n" +
                     "appointments.Type,appointments.Start,appointments.End,appointments.Customer_ID,appointments.User_ID\n" +
                     "from appointments \n" +
-                    "join contacts\n" +" on appointments.Contact_ID = contacts.Contact_ID");
+                    "join contacts\n" +" on appointments.Contact_ID = contacts.Contact_ID\n order by appointments.Appointment_ID ");
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

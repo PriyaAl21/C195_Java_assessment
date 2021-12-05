@@ -6,9 +6,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 public class Appointment {
     public int aptId;
@@ -123,16 +125,29 @@ public class Appointment {
         String title = rs.getString("Title");
         String description = rs.getString("Description");
         String location = rs.getString("Location");
-        String contact = rs.getString("contact_Name");
+        String contact = rs.getString("Contact_Name");
         String type = rs.getString("Type");
       //
         LocalDateTime start =rs.getTimestamp("Start").toLocalDateTime();
 
-        ZonedDateTime ldtZoned = start.atZone(ZoneId.systemDefault());//what zone is start in before it is changed to system default?
-        LocalDateTime changedDateTime = ldtZoned.toLocalDateTime();
+        ZonedDateTime ldtZoned = start.atZone(ZoneId.systemDefault());
+        LocalDateTime startDateNTime = ldtZoned.toLocalDateTime();
        // String str = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(changedDateTime);
 
+     //check if appointments are within 15 min of local time zone
 
+        LocalDateTime now = LocalDateTime.now();
+        //System.out.println(now.toString());
+        System.out.println(startDateNTime.toLocalDate());
+        System.out.println(now.toLocalDate());
+        if(now.toLocalDate().toString().equals(startDateNTime.toLocalDate().toString()) && startDateNTime.toLocalTime().isAfter(now.toLocalTime()) ) {
+            System.out.println(startDateNTime.toLocalTime().until(now.toLocalTime(), ChronoUnit.MINUTES));
+            if (startDateNTime.toLocalTime().until(now.toLocalTime(), ChronoUnit.MINUTES) <= 15) {
+
+                System.out.println("You have an appointment within 15 min!");
+
+            }
+        }
        // System.out.println(startDT);
 //        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 //        LocalDateTime localDateTime= LocalDateTime.parse(start.toString(), formatter);
@@ -142,7 +157,7 @@ public class Appointment {
 //        System.out.println(zonedDateTime);
 
        // LocalDateTime startDateNTime = rs.getTimestamp("Start").toLocalDateTime();;
-        LocalDateTime startDateNTime = changedDateTime;
+
 
         LocalDateTime end = rs.getTimestamp("End").toLocalDateTime();
         ZonedDateTime ldtZoned1 = end.atZone(ZoneId.systemDefault());

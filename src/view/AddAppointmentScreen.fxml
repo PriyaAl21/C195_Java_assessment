@@ -72,7 +72,7 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <DatePicker fx:id="dateField" layoutX="230.0" layoutY="393.0" prefHeight="25.0" prefWidth="116.0" />
+            <DatePicker fx:id="dateField"  editable="false" layoutX="230.0" layoutY="393.0" prefHeight="25.0" prefWidth="116.0" />
             <ComboBox fx:id="chooseStartHours" layoutX="479.0" layoutY="394.0" prefHeight="25.0" prefWidth="77.0" promptText="Hours" />
             <ComboBox fx:id="chooseStartMin" layoutX="556.0" layoutY="394.0" prefHeight="25.0" prefWidth="64.0" promptText="Min" />
             <ComboBox fx:id="chooseEndHours" layoutX="734.0" layoutY="393.0" prefHeight="25.0" prefWidth="77.0" promptText="Hours" />

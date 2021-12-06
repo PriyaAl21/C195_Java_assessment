@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +18,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.ResourceBundle;
 import utilities.Crud;
 
@@ -112,17 +114,23 @@ public class AppointmentScreen extends Crud implements Initializable {
     }
 
     public void OnViewMonth(ActionEvent actionEvent) {
+        ObservableList<Appointment> monthlyApts = FXCollections.observableArrayList();
         LocalDateTime now = LocalDateTime.now();
         LocalDate today = now.toLocalDate();
-        String month = today.getMonth().toString();
+        Month month = today.getMonth();
         int year = today.getYear();
         for(Appointment apt : DataStorage.getAllAppointments()){
-
+            if(apt.getStartDateNTime().getYear()==year){
+                if(apt.getStartDateNTime().getMonth()==month){
+                    monthlyApts.add(apt);
+                }
+            }
         }
+        aptTable.setItems(monthlyApts);
     }
 
     public void OnViewAll(ActionEvent actionEvent) {
-
+        aptTable.setItems(DataStorage.getAllAppointments());
 
     }
 

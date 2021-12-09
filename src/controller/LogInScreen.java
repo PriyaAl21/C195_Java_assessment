@@ -11,13 +11,15 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import main.Main;
 import utilities.JDBC;
+import java.io.*;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -45,6 +47,7 @@ public class LogInScreen implements Initializable {
 
     public static String name;
 
+
     ResourceBundle rb;
 
     @Override
@@ -62,6 +65,11 @@ public class LogInScreen implements Initializable {
          usName.setText(rb.getString("first"));
          pwd.setText(rb.getString("second"));
          logInButton.setText(rb.getString("log"));
+
+
+
+
+
 
     }
 
@@ -86,8 +94,8 @@ public class LogInScreen implements Initializable {
 
       if (!rs.isBeforeFirst()) {
           if(name.equals((""))) {
-              alertError(3); }
-           else alertError(1);
+              alertError(3,"none"); }
+           else alertError(1,name);
         }
 
         while (rs.next()) {
@@ -100,6 +108,7 @@ public class LogInScreen implements Initializable {
                             if (pass.equals(pwd)) {
                                 this.name = user;
                                 System.out.println("login");
+                                addToLog(user,"successful");
                                 Stage primaryStage = new Stage();
                                 Parent root = FXMLLoader.load(getClass().getResource("/view/AppointmentScreen.fxml"));
                                 primaryStage.setTitle("Welcome");
@@ -111,31 +120,33 @@ public class LogInScreen implements Initializable {
                             }
 
                             else{
-                                if(pass.equals("")) alertError(4);
-                                else {alertError(2);}
+                                if(pass.equals("")) alertError(4, name);
+                                else {alertError(2, name);}
                             }
                         } else {
                             System.out.println("Incorrect username/password!");
-                            alertError(2);
+                            alertError(2, name);
                         }
                 } catch (Exception e) {
                     System.out.println("Incorrect username/password!");
-                    alertError(2);
+                    alertError(2, name);
                     }
                 break;
 
         }
     }
     @FXML
-     void alertError(int n){
+     void alertError(int n, String user) throws IOException {
         Alert some = new Alert(Alert.AlertType.INFORMATION);
         if(n==1) {
             some.setTitle("Not found");
             some.setContentText(rb.getString("error1"));
+            addToLog(user, "failed");
         }
         else if(n==2){
             some.setTitle("Error");
             some.setContentText(rb.getString("error2"));
+            addToLog(user, "failed");
         }
         else if(n==3){
             some.setTitle("Error");
@@ -144,6 +155,7 @@ public class LogInScreen implements Initializable {
         else if(n==4){
             some.setTitle("Error");
             some.setContentText(rb.getString("error4"));
+            addToLog(user, "failed");
         }
 
 
@@ -151,6 +163,22 @@ public class LogInScreen implements Initializable {
     }
 
 
+
+    public void addToLog(String user, String loginAttempt) throws IOException {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDate today = now.toLocalDate();
+        Timestamp ts = Timestamp.valueOf(now);
+        String filename = "login_activity.txt";
+        PrintWriter outputfile = new PrintWriter(new FileWriter(filename, true));
+        outputfile.println("Username - "+ user);
+        System.out.println(user);
+        System.out.println("Date - "+ today);
+        outputfile.println("Date - "+ today);
+        outputfile.println("Time - "+ ts);
+        outputfile.println("Login attempt "+ loginAttempt+"\n\n");
+       // outputfile.flush();
+         outputfile.close();
+    }
     public void onUserName(ActionEvent actionEvent) {
     }
 

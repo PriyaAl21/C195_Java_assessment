@@ -16,6 +16,7 @@ import model.DataStorage;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -111,6 +112,53 @@ public class AppointmentScreen extends Crud implements Initializable {
     }
 
     public void OnViewWeek(ActionEvent actionEvent) {
+        ObservableList<Appointment> weeklyApts = FXCollections.observableArrayList();
+        LocalDateTime now = LocalDateTime.now();
+        LocalDate today = now.toLocalDate();
+        //Month month = today.getMonth();
+        DayOfWeek day = today.getDayOfWeek();
+        System.out.println(day.toString());
+        int year = today.getYear();
+        int n=0;
+        switch(day){
+            case SUNDAY:
+                n= 6;
+                break;
+            case MONDAY:
+                n=5;
+                break;
+            case TUESDAY:
+                n=4;
+                break;
+            case WEDNESDAY:
+                n=3;
+                break;
+            case THURSDAY:
+                n=2;
+                break;
+            case FRIDAY:
+                n=1;
+                break;
+            case SATURDAY:
+                n=0;
+                break;
+        }
+
+        ObservableList<LocalDate> dates = FXCollections.observableArrayList();
+        LocalDate tomw ;
+        for(int i=1; i<=n; i++){
+            System.out.println("day- "+n);
+            tomw = today.plusDays(i);
+            System.out.println(tomw);
+           dates.add(tomw);
+        }
+        for(Appointment apt : DataStorage.getAllAppointments()){
+          if(dates.contains(apt.getStartDateNTime().toLocalDate())){
+              weeklyApts.add(apt);
+          }
+        }
+        aptTable.setItems(weeklyApts);
+
     }
 
     public void OnViewMonth(ActionEvent actionEvent) {

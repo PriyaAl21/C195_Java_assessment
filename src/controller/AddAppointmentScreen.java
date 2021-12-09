@@ -10,6 +10,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import model.Customer;
+import model.DataStorage;
 import utilities.Crud;
 
 import java.net.URL;
@@ -151,6 +152,12 @@ public class AddAppointmentScreen extends Crud implements Initializable {
         LocalDateTime createDate = LocalDateTime.now();
         Timestamp lastUpdate = Timestamp.valueOf(createDate);
         String createdBy = name;
+
+        //to check if appointments collide
+
+        for(Appointment apt: DataStorage.getAllAppointments()){
+
+        }
 
         System.out.println("Select * from contacts where Contact_Name = "+ contact);
         ResultSet rs = Select("Select * from contacts where Contact_Name = "+ '"'+contact+'"');

@@ -112,7 +112,7 @@ public class LogInScreen implements Initializable {
                                 Stage primaryStage = new Stage();
                                 Parent root = FXMLLoader.load(getClass().getResource("/view/AppointmentScreen.fxml"));
                                 primaryStage.setTitle("Welcome");
-                                primaryStage.setScene(new Scene(root, 900, 700));
+                                primaryStage.setScene(new Scene(root, 1200, 700));
                                 primaryStage.show();
                                 Stage stage = (Stage) logInButton.getScene().getWindow();
                                 stage.close();

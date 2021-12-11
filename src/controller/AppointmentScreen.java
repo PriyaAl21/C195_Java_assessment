@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import model.Appointment;
 import model.DataStorage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -44,6 +45,8 @@ public class AppointmentScreen extends Crud implements Initializable {
     public RadioButton viewAll;
     public Button viewCustomers;
     public Button exitButton;
+    public Button typeReport;
+    public Button contactReport;
 
 
     @Override
@@ -198,4 +201,14 @@ public class AppointmentScreen extends Crud implements Initializable {
     }
 
 
+    public void onTypeReport(ActionEvent actionEvent) {
+    }
+
+    public void onContactReport(ActionEvent actionEvent) throws IOException {
+        Stage primaryStage = new Stage();
+        Parent root = FXMLLoader.load(getClass().getResource("/view/AppointmentTypeScreen.fxml"));
+        primaryStage.setTitle("Welcome");
+        primaryStage.setScene(new Scene(root, 1200, 700));
+        primaryStage.show();
+    }
 }
